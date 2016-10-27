@@ -1,0 +1,568 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <title>Plants Observation</title>
+  <!--link rel="stylesheet" href="assets/demo.css"!-->
+  
+  <!--script src="assets/stats.min.js"></script!-->
+  <!--script src="assets/color_camera_gui.js"></script!-->
+
+  <style>
+  .container {
+      text-align: center;
+
+}
+  html,body {
+    background-color: #EBE8DF;
+    color: #555;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    position: static;
+
+
+  }
+  video, canvas {
+    
+    left: 0;
+    right: 0;
+    padding: 0;
+    margin: auto;
+    display: block;
+    text-align:center;
+    position: absolute;
+
+  }
+  .video-front {
+      transform: scale(-1, 1);
+  }
+  .portrait {
+  transform-origin: 0 0;
+  transform: rotate(-90deg) translateX(-100%);
+}
+  nav {
+  background-color: #fff;
+  border: 1px solid #dedede;
+  border-radius: 4px;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+  color: #888;
+  display: block;
+  margin: 8px 22px 8px 22px;
+  overflow: hidden;
+  width: 90%; 
+  text-align: left;
+
+}
+
+  nav ul {
+    margin: 0;
+    padding: 0;
+  }
+
+    nav ul li {
+      display: inline-block;
+      list-style-type: none;
+      
+      -webkit-transition: all 0.2s;
+        -moz-transition: all 0.2s;
+        -ms-transition: all 0.2s;
+        -o-transition: all 0.2s;
+        transition: all 0.2s; 
+    }
+      
+      nav > ul > li > a > .caret {
+        border-top: 4px solid #aaa;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+        content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        vertical-align: middle;
+  
+        -webkit-transition: color 0.1s linear;
+        -moz-transition: color 0.1s linear;
+        -o-transition: color 0.1s linear;
+          transition: color 0.1s linear; 
+      }
+
+      nav > ul > li > a {
+        color: #aaa;
+        display: block;
+        line-height: 56px;
+        padding: 0 24px;
+        text-decoration: none;
+      }
+
+        nav > ul > li:hover {
+          background-color: rgb( 40, 44, 47 );
+        }
+
+        nav > ul > li:hover > a {
+          color: rgb( 255, 255, 255 );
+        }
+
+        nav > ul > li:hover > a > .caret {
+          border-top-color: rgb( 255, 255, 255 );
+        }
+      
+      nav > ul > li > div {
+        background-color: rgb( 40, 44, 47 );
+        border-top: 0;
+        border-radius: 0 0 4px 4px;
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+        display: none;
+        margin: 0;
+        opacity: 0;
+        position: absolute;
+        width: 165px;
+        visibility: hidden;
+        z-index: 1;
+  
+        -webkit-transiton: opacity 0.2s;
+        -moz-transition: opacity 0.2s;
+        -ms-transition: opacity 0.2s;
+        -o-transition: opacity 0.2s;
+        -transition: opacity 0.2s;
+      }
+
+        nav > ul > li:hover > div {
+          display: block;
+          opacity: 1;
+          visibility: visible;
+        }
+
+          nav > ul > li > div ul > li {
+            display: block;
+          }
+
+            nav > ul > li > div ul > li > a {
+              color: #fff;
+              display: block;
+              padding: 12px 24px;
+              text-decoration: none;
+            }
+
+              nav > ul > li > div ul > li:hover > a {
+                background-color: rgba( 255, 255, 255, 0.1);
+              }
+       #selection { border: 3px dotted ;
+              color: #ff00af;
+              position: absolute;
+              z-index: 1;
+              text-align: center;
+              width: 640px;
+              height: 480px;
+
+        }
+
+</style>
+</head>
+<body>  
+      <h1>Plants Observation</h1>
+      <div id="aboveMenu"></div>
+      <p id= "Select" style= " color: #888; display: block; margin: 8px 22px 8px 22px;overflow: hidden;
+         text-align: left;" >Select your plant!</p>
+      <div>
+      <nav>
+        <ul >
+          <li><a>Apple Fruit<span class="caret"></span></a>
+            <div>
+              <ul>
+                <li id='fungal'onclick="selectOption('fungal')"><a>Fungal</a></li>
+                <li><a href="products.html#table">Scab</a></li>
+                <li><a href="products.html#table">Nematodes, parasitic</a></li>
+                <li><a href="products.html#table">Viral</a></li>
+                <li><a href="products.html#table">Viroid</a></li>
+                <li><a href="products.html#table">Suspected Viral</a></li>
+                <li><a href="products.html#table">Phytoplasmal</a></li>
+                <li><a href="cooker.html">Disease3</a></li>
+              </ul>
+            </div>
+            </li>
+          <li><a>Fig<span class="caret"></span></a>
+            <div>
+              <ul>
+                <li><a href="products.html#chair">Fig rust</a></li>
+                <li><a href="products.html#chair">Alternaria rot</a></li>
+                <li><a href="products.html#table">Aspergillus rot</a></li>
+                <li><a href="products.html#table">Botrytis limb blight</a></li>
+                <li><a href="products.html#table">Fib blister mites</a></li>
+                <li><a href="products.html#table">Fig mosaic</a></li>
+                <li><a href="products.html#table">June beetle</a></li>
+                <li><a href="products.html#table">Smut</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </nav> 
+      </div>
+      <div>
+      <video id="video" width="640" height="480" preload autoplay loop muted controls></video>
+      <canvas id="canvas" width="640" height="480" hidden="0"  ></canvas>
+      <canvas id="mycanvas" width="640" height="480" hidden  ></canvas>  
+      </div> 
+     
+<!--div class="demo-frame">
+    <div class="demo-container">
+      <img id="im" src="Data/leave2.png">
+    </div>
+  </div!-->
+
+      <div id="underMenu"></div>
+      <button id="bt" onclick="stopFunction()" >pause</button>   
+      <div id="hu" style= " color: #888; display: block; text-align: left; width:10%;"></div>
+      <div id="pixel" style= " color: #888; display: block; text-align: left; width:100%;"></div>
+      <div id="option" style= " color: #888; display: block; text-align: left; width:100%;"></div>
+
+
+      <script src="build/tracking.js"></script>
+      <script src="js/three.js"></script>
+      <script src="js/dat.gui.min.js"></script>
+      <script src="js/jquery-3.1.0.min.js"></script>
+
+      <!--script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script!-->
+
+
+  <script>
+      var loaded = false;
+      var adviseWidth = 250, adviseHeight = 250, adviseX = 20, adviseY=20 , adviseTextX = adviseX+15, adviseTextY = adviseY+30;
+      var location,showposition,lat,lon;
+      var count = 0;
+      var isPause = false;
+      var isCount0 = false;
+
+      var pixel = document.getElementById("pixel");
+      var pixelCount = document.getElementById("pixel");
+      var adviseCanvas = document.getElementById('mycanvas');
+      var adviseContext = adviseCanvas.getContext('2d');
+
+      var isMobile = false;
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      isMobile = true;
+      }
+
+      window.onload = function() {
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var mycanvas = document.getElementById('mycanvas');
+      var context = canvas.getContext('2d');
+      var countIs = 0;
+      var textbox;
+    
+      var tracker = new tracking.ColorTracker([ 'brown']);
+      tracking.track('#video', tracker, { camera: true });
+
+      if(isMobile == false && window.innerHeight > window.innerWidth)
+      {   video.width=window.innerWidth;
+          video.height= 480*(video.width/640);
+          canvas.width= video.width;
+          canvas.height= video.height;
+          mycanvas.width= video.width;
+          mycanvas.height= video.height;
+          var h = video.height + 20;
+          document.getElementById("underMenu").style.margin = h+ "px";
+      }
+      if(isMobile == false && window.innerWidth > window.innerHeight ){
+       // alert('desktop');
+       // document.getElementById("video").style.transform = "scale(-1, 1)"; 
+      $('#video').addClass('video-front');
+      $('#canvas').addClass('video-front');
+
+      }
+
+      if(isMobile==true ){
+
+        if(window.innerHeight < window.innerWidth){
+           //video.width=window.innerWidth;
+           //video.height= 480*(video.width/640);
+           canvas.width= video.width;
+           canvas.height= video.height;
+           mycanvas.width= video.width;
+           mycanvas.height= video.height;
+           var h = video.height + 20;
+           document.getElementById("underMenu").style.margin = h+ "px";
+                     alert('w>h');
+
+          // alert(video.width+" "+window.width);
+         }
+       else if (window.innerHeight > window.innerWidth){ 
+          //$('#video').addClass('portrait');
+          //$('#canvas').addClass('portrait');
+          alert('h>w'+ ' '+ video.width);
+           canvas.width= video.width;
+           canvas.height= video.height;
+           mycanvas.width= video.width;
+           mycanvas.height= video.height;
+
+
+         }
+
+      }
+      console.log(video.width+' '+ video.height);
+      //$('#pixel').empty().append(count);
+     // clearBox('pixel');
+      $('#pixel').append(count);
+
+      var isCountingDone = false;
+      var isFirst = true;
+
+      tracker.on('track', function(event) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        event.data.forEach(function(rect) {
+
+            context.strokeStyle = rect.color;
+            context.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
+            context.font = '11px Helvetica';
+            context.fillStyle = "#fff";
+            //context.fillText(rect.width + 'px');
+           // context.fillText('y: ' + rect.width*rect.height + 'px', rect.x + rect.width + 5, rect.y + 22);
+
+            if (isPause == true && isCountingDone == false) { 
+               count += (rect.width * rect.height);             
+            }
+
+        });
+
+        isCountingDone = true;
+
+        if(isPause == false && isCountingDone == true) {
+          $('#pixel').empty().append(count); 
+          isCountingDone = false; 
+        }
+
+        else if (isPause == true && isCountingDone == true ) {
+          $('#pixel').empty().append(count); 
+          isFirst = false;
+        }
+
+      }); 
+
+        ////
+         showposition = navigator.geolocation.getCurrentPosition(function(position){
+         lat = position.coords.latitude;
+         lon = position.coords.longitude;
+         saveLocation(lat,lon);
+        
+          $(document).ready(function(){
+     
+               $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&appid=76f8571fec547a46b3e93e74c9ef3734&units=metric", function(result){
+                 var coord = result["coord"];
+                    var coorlon = coord.lon;
+                    var coorlat = coord.lat;
+                 
+                 var weather = result["weather"];
+                   for(var obj in weather){
+                       weatherMain = weather[obj].main;
+                      var weatherDescription = weather[obj].description;
+                    }
+                 var main = result["main"];
+               
+                   var temp = main.temp;
+                   var pressure = main.pressure;
+                   var humidity = main.humidity;
+                 
+                  name = result.name;
+     
+                  $('#hu').append(weatherMain + " like " + weatherDescription +" at "+ name);
+                  $('#hu').append( " Temp: "+temp + " Pressure: " + pressure +" Humidity: "+ humidity);
+
+              draw();
+                var size =18;
+                function draw(){
+
+                  adviseCanvas = document.getElementById('mycanvas');
+                  adviseContext = adviseCanvas.getContext('2d');
+                  adviseContext.clearRect(0, 0, adviseCanvas.width, adviseCanvas.height);
+
+                  adviseContext.beginPath();
+                 // adviseContext.translate(adviseX,adviseY ); //x,y,w,h
+                  adviseContext.rect(adviseX,adviseY, adviseWidth ,adviseHeight); //x,y,w,h
+                  
+                 //adviseContext.fillStyle= "rgba(0,205,80,0.9)"
+                  adviseContext.fillStyle= "#ffb900"
+                  adviseContext.fill();
+                  adviseContext.font = "18px Helvetica";
+                  //adviseContext.fillStyle = "rgba(255,0,0,0.95)";
+                  adviseContext.fillStyle = "#333333";
+
+                  //fillTextMultiLine(adviseContext,  " has"+" \n Pressure: ", adviseTextX, adviseTextY); 
+                 textbox = fillTextMultiLine(adviseContext, name + " has " + weatherMain +"\nTemp: "+ temp + "\n Pressure: "+pressure+"\n Humidity: "+humidity, adviseTextX, adviseTextY); 
+                  requestAnimationFrame(draw);
+              }
+
+              }); // close of getJSON    
+          }); // close of ready(function)
+     }); // close of showposition function   
+     //initGUIControllers(tracker);
+        //var adviseCanvas = document.getElementById('mycanvas');
+
+        gui = new dat.GUI();
+        parameters = 
+        {
+            x: 0, y: 0, w: adviseWidth, h: adviseHeight,
+            adviseVisible: true,
+            detectionVisivle: true,
+            size: 18, 
+        };
+        var folder1 = gui.addFolder('Textbox');
+        var adX = folder1.add( parameters, 'x' ).min(0).max(400).step(5).listen();
+        var adY = folder1.add( parameters, 'y' ).min(0).max(300).step(5).listen();
+        //var adW = folder1.add( parameters, 'w' ).min(0).max(400).step(5).listen();
+        var fontsize = folder1.add( parameters, 'size' ).min(8).max(28).step(1).listen();
+        var adviseVis = gui.add(parameters,'adviseVisible').name('General Advise visible?').listen();
+        var detectionVis = gui.add(parameters,'detectionVisivle').name('Detection visible?').listen();
+        adviseVis.onChange(function (value) {
+          if(value==true){
+            visibleCanvas('mycanvas');
+          }else if(value==false){
+            hiddenCanvas('mycanvas');
+          }
+        });
+        detectionVis.onChange(function (value) {
+          if(value==true){
+            visibleCanvas('canvas');
+          }else if(value==false){
+            hiddenCanvas('canvas');
+          }
+        });
+        adX.onChange(function(value){ adviseX = value; adviseTextX = value+15});
+        adY.onChange(function(value){ adviseY = value; adviseTextY = value+30});
+        fontsize.onChange(function(value) {
+         // var contain = value+"px Helvetica";
+           //adviseContext.font = "'"+contain+"'" ;
+           //var spliter = adviseContext.font.split('px');
+           var newsize = value; 
+           adviseContext.font = '"'+newsize+'px Arial'+'"';
+        });
+     //   adW.onChange(function(value){ adviseWidth = value; adviseHeight = value;});
+        //adviseX.needsUpdate = true;
+        folder1.open();
+        var parametersFolder = gui.addFolder('Parameters');
+
+        parametersFolder.add(tracker, 'minDimension', 1, 20).step(1);
+        parametersFolder.add(tracker, 'minGroupSize', 1, 20).step(1);
+        var ischeck = this;
+        var trackedColors = {
+         // custom: false  //for set diasble checkbox
+         
+
+        };
+
+        Object.keys(tracking.ColorTracker.knownColors_).forEach(function(color) {
+          if(color=='brown')
+            {trackedColors['brown'] = true;}
+          else
+          trackedColors[color] = false;
+        });
+        var colorsFolder = gui.addFolder('Colors');
+        Object.keys(trackedColors).forEach(function(color) {
+          colorsFolder.add(trackedColors, color).onFinishChange(updateColors);
+        });
+        colorsFolder.open();
+
+        function updateColors() {
+        var colors = [];
+
+        for (var color in trackedColors) {
+            if (trackedColors[color]) {
+              colors.push(color);
+            }
+        }
+
+        tracker.setColors(colors);
+        }                  
+
+        gui.open();
+    }; // close of window.onload
+
+////-----------------------------------FUNCTIONS---------------------------------------------//
+        function stopFunction()
+        {
+          var v = document.getElementById('video');
+              if (v.paused) {
+                      v.play();
+                      //v.controls=null;                  
+                      isPause = false;
+                       if(count!=0){
+                         count = 0;
+                       }
+
+
+              } else {
+                      v.pause();
+                     // count = 0;
+                      isPause = true; 
+                      // if(count!=0){ alert(count);}
+                     // v.controls="controls";
+                    }
+
+
+        }
+        function selectOption(elementID)
+        {
+          var text = document.getElementById(elementID);
+        //  document.getElementById('option').append(text);
+          console.log(text.innerText);
+        }
+        function clearBox(elementID)
+        {
+            document.getElementById(elementID).innerHTML = "";
+        }
+        function hiddenCanvas(elementID) {
+            document.getElementById(elementID).style.visibility = "hidden";
+        }
+
+        function visibleCanvas(elementID) {
+          //  document.getElementById("imgbox1").style.display = "block";
+            document.getElementById(elementID).style.visibility = "visible";
+        }
+        function saveLocation(lat,lon){
+
+          this.lat = clone(lat);
+          this.lon = clone(lon);
+        }
+        function clone(obj) {
+          if (null == obj || "object" != typeof obj) return obj;
+          var copy = obj.constructor();
+          for (var attr in obj) {
+              if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+          }
+          return copy;
+        }
+
+        function fillTextMultiLine(ctx, text, x, y) {
+          var line2 = 0; 
+          var lineHeight = ctx.measureText("M").width * 1.2;
+         // console.log(lineHeight*(2));
+          adviseHeight = lineHeight*(7);
+          var lines = text.split("\n");
+            for (var i = 0; i < lines.length; ++i) {
+              ctx.fillText(lines[i], x, y);
+              y += lineHeight;
+              //line+=1;
+          }
+         // var longest = line 
+         var max;
+       //  var measure = [];
+       //  var lineWidth = ctx.measureText(lines[0]).width;
+         for(var i = 0; i<lines.length; i++){
+           var lineWidth = ctx.measureText(lines[i]).width;
+
+           
+           max = Math.max(ctx.measureText(lines[0]).width,ctx.measureText(lines[1]).width,ctx.measureText(lines[2]).width,ctx.measureText(lines[3]).width);
+         }
+
+       //console.log(max);
+        adviseWidth = max*1.25
+          
+          
+       
+      
+        }
+  </script>
+
+</body>
+</html>
