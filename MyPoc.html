@@ -35,6 +35,7 @@
     position: absolute;
 
   }
+  
   .video-front {
       transform: scale(-1, 1);
   }
@@ -202,7 +203,8 @@
       <div>
       <video id="video" width="640" height="480" preload autoplay loop muted controls></video>
       <canvas id="canvas" width="640" height="480" hidden="0"  ></canvas>
-      <canvas id="mycanvas" width="640" height="480" hidden  ></canvas>  
+      <canvas id="mycanvas" width="640" height="480" hidden  ></canvas> 
+      <canvas id="circle" width="100" height = "100" hidden="0" ></canvas> 
       </div> 
      
 <!--div class="demo-frame">
@@ -248,7 +250,9 @@
       var video = document.getElementById('video');
       var canvas = document.getElementById('canvas');
       var mycanvas = document.getElementById('mycanvas');
+      var circle = document.getElementById('circle')
       var context = canvas.getContext('2d');
+      var contextCircle = circle.getContext('2d');
       var countIs = 0;
       var textbox;
     
@@ -270,6 +274,7 @@
        // document.getElementById("video").style.transform = "scale(-1, 1)"; 
       $('#video').addClass('video-front');
       $('#canvas').addClass('video-front');
+      $('#circle').addClass('video-front');
 
       }
 
@@ -311,6 +316,7 @@
 
       tracker.on('track', function(event) {
         context.clearRect(0, 0, canvas.width, canvas.height);
+        contextCircle.clearRect(0, 0, circle.width, circle.height);
         event.data.forEach(function(rect) {
 
             context.strokeStyle = rect.color;
@@ -319,6 +325,10 @@
             context.fillStyle = "#fff";
             //context.fillText(rect.width + 'px');
            // context.fillText('y: ' + rect.width*rect.height + 'px', rect.x + rect.width + 5, rect.y + 22);
+            contextCircle.strokeStyle = rect.color;
+            contextCircle.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
+            contextCircle.font = '11px Helvetica';
+            contextCircle.fillStyle = "#fff";
 
             if (isPause == true && isCountingDone == false) { 
                count += (rect.width * rect.height);             
@@ -339,6 +349,8 @@
         }
 
       }); 
+
+
 
         ////
          showposition = navigator.geolocation.getCurrentPosition(function(position){
