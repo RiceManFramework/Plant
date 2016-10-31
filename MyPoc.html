@@ -366,11 +366,12 @@ li > a:only-child:after { content: ''; }
       <p id= "Select" style= " color: #888; display: block; margin: 8px 22px 8px 22px;overflow: hidden;
          text-align: left;" >Select your plant!</p>
    
-      <div>
-      <video id="video" width="640" height="480" preload autoplay loop muted controls></video>
-      <canvas id="canvas" width="640" height="480" hidden="0"  ></canvas>
+      <div> <!--video, color detection, advise, image from video, selection!-->
+      <video id="video" width="640" height="480" preload autoplay loop muted controls></video> 
+      <canvas id="canvas" width="640" height="480" hidden="0"  ></canvas> 
       <canvas id="mycanvas" width="640" height="480" hidden  ></canvas> 
-      <canvas id="circle" width="100" height = "100" hidden="0" ></canvas> 
+      <canvas id="videoImage" width="640" height = "480" hidden="0" ></canvas> 
+      <canvas id="rectangle" width="640" height = "480" hidden="0" ></canvas> 
       </div> 
      
 <!--div class="demo-frame">
@@ -381,6 +382,7 @@ li > a:only-child:after { content: ''; }
 
       <div id="underMenu"></div>
       <button id="bt" onclick="stopFunction()" >pause</button>   
+      <button id="opennewwindow">capture</button>   
       <div id="hu" style= " color: #888; display: block; text-align: left; width:10%;"></div>
       <div id="pixel" style= " color: #888; display: block; text-align: left; width:100%;"></div>
       <div id="option" style= " color: #888; display: block; text-align: left; width:100%;"></div>
@@ -406,6 +408,11 @@ li > a:only-child:after { content: ''; }
       var pixelCount = document.getElementById("pixel");
       var adviseCanvas = document.getElementById('mycanvas');
       var adviseContext = adviseCanvas.getContext('2d');
+      var rectangle = document.getElementById('rectangle')
+      var rectangleContext = rectangle.getContext('2d');
+      var rectX = 0, rectY = 0, rectW = 200, rectH = 200;
+
+
 
       var isMobile = false;
       if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -416,9 +423,8 @@ li > a:only-child:after { content: ''; }
       var video = document.getElementById('video');
       var canvas = document.getElementById('canvas');
       var mycanvas = document.getElementById('mycanvas');
-      var circle = document.getElementById('circle')
       var context = canvas.getContext('2d');
-      var contextCircle = circle.getContext('2d');
+     
       var countIs = 0;
       var textbox;
     
@@ -432,16 +438,18 @@ li > a:only-child:after { content: ''; }
           canvas.height= video.height;
           mycanvas.width= video.width;
           mycanvas.height= video.height;
+          rectangle.width= video.width;
+          rectangle.height= video.height;
           var h = video.height + 20;
           document.getElementById("underMenu").style.margin = h+ "px";
       }
       if(isMobile == false && window.innerWidth > window.innerHeight ){
-       // alert('desktop');
+       // For Desktop version with front-webcam
        // document.getElementById("video").style.transform = "scale(-1, 1)"; 
       $('#video').addClass('video-front');
       $('#canvas').addClass('video-front');
-      $('#circle').addClass('video-front');
-
+      $('#videoImage').addClass('video-front');
+      $('#rectangle').addClass('video-front');
       }
 
       if(isMobile==true ){
@@ -453,6 +461,8 @@ li > a:only-child:after { content: ''; }
            canvas.height= video.height;
            mycanvas.width= video.width;
            mycanvas.height= video.height;
+           rectangle.width= video.width;
+           rectangle.height= video.height;
            var h = video.height + 20;
            document.getElementById("underMenu").style.margin = h+ "px";
                      alert('w>h');
@@ -467,11 +477,14 @@ li > a:only-child:after { content: ''; }
            canvas.height= video.height;
            mycanvas.width= video.width;
            mycanvas.height= video.height;
-
+           rectangle.width= video.width;
+           rectangle.height= video.height;
 
          }
 
       }
+    
+                  //$('#opennewwindow').append(dataURL);
       console.log(video.width+' '+ video.height);
       //$('#pixel').empty().append(count);
      // clearBox('pixel');
@@ -482,7 +495,7 @@ li > a:only-child:after { content: ''; }
 
       tracker.on('track', function(event) {
         context.clearRect(0, 0, canvas.width, canvas.height);
-        contextCircle.clearRect(0, 0, circle.width, circle.height);
+       // contextCircle.clearRect(0, 0, circle.width, circle.height);
         event.data.forEach(function(rect) {
 
             context.strokeStyle = rect.color;
@@ -491,13 +504,16 @@ li > a:only-child:after { content: ''; }
             context.fillStyle = "#fff";
             //context.fillText(rect.width + 'px');
            // context.fillText('y: ' + rect.width*rect.height + 'px', rect.x + rect.width + 5, rect.y + 22);
-            contextCircle.strokeStyle = rect.color;
-            contextCircle.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
-            contextCircle.font = '11px Helvetica';
-            contextCircle.fillStyle = "#fff";
+          //  contextCircle.strokeStyle = rect.color;
+          //  contextCircle.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
+           // contextCircle.font = '11px Helvetica';
+          //  contextCircle.fillStyle = "#fff";
 
             if (isPause == true && isCountingDone == false) { 
-               count += (rect.width * rect.height);             
+               count += (rect.width * rect.height); 
+              //   var dataURL = video.toDataURL();
+               //  console.log(dataURL);      
+                 captureImage();
             }
 
         });
@@ -512,13 +528,11 @@ li > a:only-child:after { content: ''; }
         else if (isPause == true && isCountingDone == true ) {
           $('#pixel').empty().append(count); 
           isFirst = false;
+
         }
 
       }); 
 
-
-
-        ////
          showposition = navigator.geolocation.getCurrentPosition(function(position){
          lat = position.coords.latitude;
          lon = position.coords.longitude;
@@ -554,7 +568,6 @@ li > a:only-child:after { content: ''; }
                   adviseCanvas = document.getElementById('mycanvas');
                   adviseContext = adviseCanvas.getContext('2d');
                   adviseContext.clearRect(0, 0, adviseCanvas.width, adviseCanvas.height);
-
                   adviseContext.beginPath();
                  // adviseContext.translate(adviseX,adviseY ); //x,y,w,h
                   adviseContext.rect(adviseX,adviseY, adviseWidth ,adviseHeight); //x,y,w,h
@@ -576,6 +589,17 @@ li > a:only-child:after { content: ''; }
      }); // close of showposition function   
      //initGUIControllers(tracker);
         //var adviseCanvas = document.getElementById('mycanvas');
+       
+      drawSelection();
+          function drawSelection(){
+            rectangleContext.clearRect(0, 0, rectangle.width, rectangle.height);
+            rectangleContext.beginPath();
+            rectangleContext.lineWidth="4";
+            rectangleContext.strokeStyle="green";
+            rectangleContext.rect(rectX,rectY,rectW,rectH);
+            rectangleContext.stroke();
+            requestAnimationFrame(drawSelection);
+          }
 
         gui = new dat.GUI();
         parameters = 
@@ -583,6 +607,7 @@ li > a:only-child:after { content: ''; }
             x: 0, y: 0, w: adviseWidth, h: adviseHeight,
             adviseVisible: true,
             detectionVisivle: true,
+            moveX:0, moveY:0,
            // size: 18, 
         };
         var folder1 = gui.addFolder('Textbox');
@@ -618,16 +643,21 @@ li > a:only-child:after { content: ''; }
      //   adW.onChange(function(value){ adviseWidth = value; adviseHeight = value;});
         //adviseX.needsUpdate = true;
         folder1.open();
-        var parametersFolder = gui.addFolder('Parameters');
+        var rectangleFolder = gui.addFolder('Area of Interest');
+        var rectx = rectangleFolder.add( parameters, 'moveX' ).min(0).max(400).step(5).listen();
+        var recty = rectangleFolder.add( parameters, 'moveY' ).min(0).max(300).step(5).listen();
+        rectx.onChange(function(value){ rectX = value; });
+        recty.onChange(function(value){ rectY = value; });
 
+        var parametersFolder = gui.addFolder('Parameters');
         parametersFolder.add(tracker, 'minDimension', 1, 20).step(1);
         parametersFolder.add(tracker, 'minGroupSize', 1, 20).step(1);
+
+
         var ischeck = this;
         var trackedColors = {
          // custom: false  //for set diasble checkbox
-         
-
-        };
+         };
 
         Object.keys(tracking.ColorTracker.knownColors_).forEach(function(color) {
           if(color=='brown')
@@ -657,6 +687,15 @@ li > a:only-child:after { content: ''; }
     }; // close of window.onload
 
 ////-----------------------------------FUNCTIONS---------------------------------------------//
+        function captureImage()
+        {
+          var videoImage = document.getElementById('videoImage');
+          var videoImageContext = videoImage.getContext('2d');
+          videoImage.width = video.width;
+          videoImage.height = video.height;
+          //videoImageContext.drawImage(video,200,200,videoImage.width,videoImage.height);
+          videoImageContext.drawImage(video,rectX,rectY,rectW,rectH,10,10,rectW,rectH);
+        }      
         function stopFunction()
         {
           var v = document.getElementById('video');
