@@ -316,7 +316,7 @@ li > a:only-child:after { content: ''; }
 <body>  
       <div>
       <nav>
-      <div id="logo">Plants Observetion</div>
+      <div id="logo">Plants Observation</div>
 
         <label for="drop" class="toggle">Menu</label>
         <input type="checkbox" id="drop" />
@@ -382,14 +382,13 @@ li > a:only-child:after { content: ''; }
 
       <div id="underMenu"></div>
       <button id="bt" onclick="stopFunction()" >pause</button>   
-      <button id="opennewwindow">capture</button>   
+      <button id="opennewwindow" onclick="captureImage();">capture</button>   
       <div id="hu" style= " color: #888; display: block; text-align: left; width:10%;"></div>
       <div id="pixel" style= " color: #888; display: block; text-align: left; width:100%;"></div>
       <div id="option" style= " color: #888; display: block; text-align: left; width:100%;"></div>
 
 
       <script src="build/tracking.js"></script>
-      <script src="js/three.js"></script>
       <script src="js/dat.gui.min.js"></script>
       <script src="js/jquery-3.1.0.min.js"></script>
 
@@ -513,7 +512,6 @@ li > a:only-child:after { content: ''; }
                count += (rect.width * rect.height); 
               //   var dataURL = video.toDataURL();
                //  console.log(dataURL);      
-                 captureImage();
             }
 
         });
