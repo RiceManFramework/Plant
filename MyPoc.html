@@ -382,7 +382,15 @@ li > a:only-child:after { content: ''; }
 
       <div id="underMenu"></div>
       <button id="bt" onclick="stopFunction()" >pause</button>   
+<<<<<<< Updated upstream
       <button id="opennewwindow" onclick="captureImage();">capture</button>   
+=======
+<<<<<<< HEAD
+      <button id="opennewwindow" onclick ="captureImage()">capture</button>   
+=======
+      <button id="opennewwindow" onclick="captureImage();">capture</button>   
+>>>>>>> origin/master
+>>>>>>> Stashed changes
       <div id="hu" style= " color: #888; display: block; text-align: left; width:10%;"></div>
       <div id="pixel" style= " color: #888; display: block; text-align: left; width:100%;"></div>
       <div id="option" style= " color: #888; display: block; text-align: left; width:100%;"></div>
@@ -606,11 +614,14 @@ li > a:only-child:after { content: ''; }
             adviseVisible: true,
             detectionVisivle: true,
             moveX:0, moveY:0,
+            moveW:200, moveH:200,
            // size: 18, 
         };
         var folder1 = gui.addFolder('Textbox');
         var adX = folder1.add( parameters, 'x' ).min(0).max(400).step(5).listen();
         var adY = folder1.add( parameters, 'y' ).min(0).max(300).step(5).listen();
+        adX.onChange(function(value){ adviseX = value; adviseTextX = value+15});
+        adY.onChange(function(value){ adviseY = value; adviseTextY = value+30});
         //var adW = folder1.add( parameters, 'w' ).min(0).max(400).step(5).listen();
         //var fontsize = folder1.add( parameters, 'size' ).min(8).max(28).step(1).listen();
         var adviseVis = gui.add(parameters,'adviseVisible').name('General Advise visible?').listen();
@@ -629,8 +640,7 @@ li > a:only-child:after { content: ''; }
             hiddenCanvas('canvas');
           }
         });
-        adX.onChange(function(value){ adviseX = value; adviseTextX = value+15});
-        adY.onChange(function(value){ adviseY = value; adviseTextY = value+30});
+        
         /*fontsize.onChange(function(value) {
          // var contain = value+"px Helvetica";
            //adviseContext.font = "'"+contain+"'" ;
@@ -640,23 +650,25 @@ li > a:only-child:after { content: ''; }
         });*/
      //   adW.onChange(function(value){ adviseWidth = value; adviseHeight = value;});
         //adviseX.needsUpdate = true;
-        folder1.open();
+        //folder1.open();
         var rectangleFolder = gui.addFolder('Area of Interest');
         var rectx = rectangleFolder.add( parameters, 'moveX' ).min(0).max(400).step(5).listen();
         var recty = rectangleFolder.add( parameters, 'moveY' ).min(0).max(300).step(5).listen();
+        var rectw = rectangleFolder.add( parameters, 'moveW' ).min(100).max(600).step(5).listen();
+        var recth = rectangleFolder.add( parameters, 'moveH' ).min(100).max(420).step(5).listen();
         rectx.onChange(function(value){ rectX = value; });
         recty.onChange(function(value){ rectY = value; });
+        rectw.onChange(function(value){ rectW = value; });
+        recth.onChange(function(value){ rectH = value; });
+        rectangleFolder.open();                
 
         var parametersFolder = gui.addFolder('Parameters');
         parametersFolder.add(tracker, 'minDimension', 1, 20).step(1);
         parametersFolder.add(tracker, 'minGroupSize', 1, 20).step(1);
 
-
-        var ischeck = this;
         var trackedColors = {
          // custom: false  //for set diasble checkbox
          };
-
         Object.keys(tracking.ColorTracker.knownColors_).forEach(function(color) {
           if(color=='brown')
             {trackedColors['brown'] = true;}
@@ -677,11 +689,9 @@ li > a:only-child:after { content: ''; }
               colors.push(color);
             }
         }
-
         tracker.setColors(colors);
         }                  
-
-        gui.open();
+        colorsFolder.open();
     }; // close of window.onload
 
 ////-----------------------------------FUNCTIONS---------------------------------------------//
@@ -689,10 +699,10 @@ li > a:only-child:after { content: ''; }
         {
           var videoImage = document.getElementById('videoImage');
           var videoImageContext = videoImage.getContext('2d');
-          videoImage.width = video.width;
-          videoImage.height = video.height;
-          //videoImageContext.drawImage(video,200,200,videoImage.width,videoImage.height);
+          videoImageContext.clearRect(0, 0, videoImage.width, videoImage.height);         
           videoImageContext.drawImage(video,rectX,rectY,rectW,rectH,10,10,rectW,rectH);
+          var dataURL = videoImage.toDataURL();
+          console.log(dataURL);
         }      
         function stopFunction()
         {
@@ -712,9 +722,13 @@ li > a:only-child:after { content: ''; }
                       isPause = true; 
                       // if(count!=0){ alert(count);}
                      // v.controls="controls";
-                    }
-
-
+              }
+              if(isPause == true){
+                $("#bt").text("play");
+              }
+              else if(isPause == false){
+                $("#bt").text("pause");
+              }
         }
         function selectOption(elementID)
         {
@@ -772,10 +786,7 @@ li > a:only-child:after { content: ''; }
 
        //console.log(max);
         adviseWidth = max*1.25
-          
-          
-       
-      
+
         }
   </script>
 
