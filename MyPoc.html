@@ -42,9 +42,7 @@
   transform-origin: 0 0;
   transform: rotate(-90deg) translateX(-100%);
   }
- @import url(http://fonts.googleapis.com/css?family=Open+Sans);
- @import url(http://fonts.googleapis.com/css?family=Bree+Serif);
-
+/*CSS Menu*/
 h1 {
   font-size: 60px;
   text-align: center;
@@ -71,7 +69,6 @@ h1 {
   text-align:center;
   font-size:60px;
   line-height: 70px;
-  font-family: 'Bree Serif', 'serif';
   }
 
 #container {
@@ -92,16 +89,11 @@ p {
 nav { 
   margin:0;
   padding: 0;
-  background-color: #71bee8;
+  background-color: #ff4441;
+  width: 100%;
 }
 
-#logo {
-  display: block;
-  padding: 0 30px;
-  float: left;
-  font-size:20px;
-  line-height: 60px;
-}
+
 
 /* Since we'll have the "ul li" "float:left"
  * we need to add a clear after the container. */
@@ -110,6 +102,7 @@ nav:after {
   content:"";
   display:table;
   clear:both;
+  
 }
 
 /* Removing padding, margin and "list-style" from the "ul",
@@ -120,6 +113,7 @@ nav ul {
   margin:0;
   list-style: none;
   position: relative;
+  width: 100%;
   }
   
 /* Positioning the navigation items inline */
@@ -127,15 +121,16 @@ nav ul li {
   margin: 0px;
   display:inline-block;
   float: left;
-  background-color: #888;
+  background-color: #ff4441;
+  
   }
 
 /* Styling the links */
 nav a {
   display:block;
-  padding:20px 70px;  
+  padding:14px 20px;  
   color:#FFF;
-  font-size:17px;
+  font-size:18px;
   text-decoration:none;
 }
 
@@ -153,7 +148,7 @@ nav ul ul {
   display: none;
   position: absolute; 
   /* has to be the same number as the "line-height" of "nav a" */
-  top: 61px; 
+  top: 50px; 
 }
   
 /* Display Dropdowns on Hover */
@@ -176,7 +171,7 @@ nav ul ul li {
 */
 nav ul ul ul li {
   position: relative;
-  top:-61px;
+  top:-50px;
   /* has to be the same number as the "width" of "nav ul ul li" */ 
   left:170px; 
 }
@@ -192,13 +187,6 @@ li > a:only-child:after { content: ''; }
 
 @media all and (max-width : 768px) {
 
-  #logo {
-    display: block;
-    padding: 0;
-    width: 100%;
-    text-align: center;
-    float: none;
-  }
 
   nav {
     margin: 0;
@@ -214,7 +202,7 @@ li > a:only-child:after { content: ''; }
   /* Stylinf the toggle lable */
   .toggle {
     display: block;
-    background-color: #888;
+    background-color: #ff4441;
     padding:14px 20px;  
     color:#FFF;
     font-size:17px;
@@ -256,14 +244,16 @@ li > a:only-child:after { content: ''; }
   nav ul ul ul a{
     padding:14px 20px;  
     color:#FFF;
-    font-size:17px; 
+    font-size:18px; 
+    background-color: #ff2121; 
   }
   
   
   nav ul li ul li .toggle,
   nav ul ul a {
-    background-color: #888; 
+    background-color: #ff2121; 
   }
+  
 
   /* Hide Dropdowns by Default */
   nav ul ul {
@@ -274,6 +264,7 @@ li > a:only-child:after { content: ''; }
   }
     
   /* Hide menus on hover */
+  nav ul ul ul li:hover > ul,
   nav ul ul li:hover > ul,
   nav ul li:hover > ul {
     display: none;
@@ -301,13 +292,16 @@ li > a:only-child:after { content: ''; }
   }
 
 }
-       #selection { border: 3px dotted ;
-              color: #ff00af;
-              position: absolute;
-              z-index: 1;
-              text-align: center;
-              width: 640px;
-              height: 480px;
+
+}
+ #selection { 
+  border: 3px dotted ;             
+  color: #ff00af;
+  position: absolute;              
+  z-index: 1;              
+  text-align: center;              
+  width: 640px;              
+  height: 480px;
 
 }
 
@@ -316,7 +310,6 @@ li > a:only-child:after { content: ''; }
 <body>  
       <div>
       <nav>
-      <div id="logo">Plants Observation</div>
 
         <label for="drop" class="toggle">Menu</label>
         <input type="checkbox" id="drop" />
@@ -363,10 +356,10 @@ li > a:only-child:after { content: ''; }
       </nav> 
       </div>
       <div id="aboveMenu"></div>
-      <p id= "Select" style= " color: #888; display: block; margin: 8px 22px 8px 22px;overflow: hidden;
-         text-align: left;" >Select your plant!</p>
+      <div id= "Select" style= " color: #888; display: block; margin: 8px 22px 8px 22px;overflow: hidden;
+         text-align: left;" >Select your plant!</div>
    
-      <div> <!--video, color detection, advise, image from video, selection!-->
+      <div id="canvasdiv"> <!--video, color detection, advise, image from video, selection!-->
       <video id="video" width="640" height="480" preload autoplay loop muted controls></video> 
       <canvas id="canvas" width="640" height="480" hidden="0"  ></canvas> 
       <canvas id="mycanvas" width="640" height="480" hidden  ></canvas> 
@@ -441,6 +434,8 @@ li > a:only-child:after { content: ''; }
           rectangle.height= video.height;
           var h = video.height + 20;
           document.getElementById("underMenu").style.margin = h+ "px";
+         // $("bt").insertAfter("canvasdiv");
+
       }
       if(isMobile == false && window.innerWidth > window.innerHeight ){
        // For Desktop version with front-webcam
@@ -470,14 +465,19 @@ li > a:only-child:after { content: ''; }
          }
        else if (window.innerHeight > window.innerWidth){ 
           //$('#video').addClass('portrait');
-          //$('#canvas').addClass('portrait');
-          alert('h>w'+ ' '+ video.width);
+          $('#canvas').addClass('portrait');
+          $('#videoImage').addClass('portrait');
+          $('#rectangle').addClass('portrait');
+         // video.width=window.innerWidth;
+          //video.height= 480*(video.width/640);
+          //alert('h>w'+ ' '+ video.width + ' ' + video.height);
            canvas.width= video.width;
            canvas.height= video.height;
            mycanvas.width= video.width;
            mycanvas.height= video.height;
            rectangle.width= video.width;
            rectangle.height= video.height;
+         
 
          }
 
