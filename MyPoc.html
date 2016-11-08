@@ -34,6 +34,9 @@
     position: absolute;
 
   }
+  button {
+    -webkit-transform:translateZ(200px); /* Equivalent or greater than parent's*/
+  }
   
   .video-front {
       transform: scale(-1, 1);
@@ -311,7 +314,7 @@ li > a:only-child:after { content: ''; }
       <div>
       <nav>
 
-        <label for="drop" class="toggle">Menu</label>
+      <label for="drop" class="toggle">Menu</label>
         <input type="checkbox" id="drop" />
             <ul class="menu">
                 <li><a href="#">Home</a></li>
@@ -356,10 +359,10 @@ li > a:only-child:after { content: ''; }
       </nav> 
       </div>
       <div id="aboveMenu"></div>
-      <div id= "Select" style= " color: #888; display: block; margin: 8px 22px 8px 22px;overflow: hidden;
-         text-align: left;" >Select your plant!</div>
+      <p id= "Select" style= " color: #888; display: block; margin: 8px 22px 8px 22px;overflow: hidden;
+         text-align: left;" >Select your plant!</p>
    
-      <div id="canvasdiv"> <!--video, color detection, advise, image from video, selection!-->
+      <div id="canvasDiv" > <!--video, color detection, advise, image from video, selection!-->
       <video id="video" width="640" height="480" preload autoplay loop muted controls></video> 
       <canvas id="canvas" width="640" height="480" hidden="0"  ></canvas> 
       <canvas id="mycanvas" width="640" height="480" hidden  ></canvas> 
@@ -374,12 +377,12 @@ li > a:only-child:after { content: ''; }
   </div!-->
 
       <div id="underMenu"></div>
-      <button id="bt" onclick="stopFunction()" >pause</button>   
-      <button id="opennewwindow" onclick="captureImage();">capture</button>   
+      <button id="bt" style="font-size: 15px;" onmousedown="stopFunction()" >pause</button>   
+      <button id="opennewwindow" style="font-size: 15px;"onclick="captureImage();">capture</button>   
       <div id="hu" style= " color: #888; display: block; text-align: left; width:10%;"></div>
       <div id="pixel" style= " color: #888; display: block; text-align: left; width:100%;"></div>
+      <div id="capturecheck" style= " color: #888; display: block; text-align: left; width:100%;"></div>
       <div id="option" style= " color: #888; display: block; text-align: left; width:100%;"></div>
-
 
       <script src="build/tracking.js"></script>
       <script src="js/dat.gui.min.js"></script>
@@ -398,6 +401,7 @@ li > a:only-child:after { content: ''; }
 
       var pixel = document.getElementById("pixel");
       var pixelCount = document.getElementById("pixel");
+      var capturecheck = document.getElementById("capturecheck");
       var adviseCanvas = document.getElementById('mycanvas');
       var adviseContext = adviseCanvas.getContext('2d');
       var rectangle = document.getElementById('rectangle')
@@ -416,9 +420,9 @@ li > a:only-child:after { content: ''; }
       var canvas = document.getElementById('canvas');
       var mycanvas = document.getElementById('mycanvas');
       var context = canvas.getContext('2d');
-     
       var countIs = 0;
       var textbox;
+      $("#bt").on("tap",stopFunction());
     
       var tracker = new tracking.ColorTracker([ 'brown']);
       tracking.track('#video', tracker, { camera: true });
@@ -433,9 +437,7 @@ li > a:only-child:after { content: ''; }
           rectangle.width= video.width;
           rectangle.height= video.height;
           var h = video.height + 20;
-          document.getElementById("underMenu").style.margin = h+ "px";
-         // $("bt").insertAfter("canvasdiv");
-
+          document.getElementById("canvasDiv").style.marginBottom = h+ "px";
       }
       if(isMobile == false && window.innerWidth > window.innerHeight ){
        // For Desktop version with front-webcam
@@ -447,7 +449,8 @@ li > a:only-child:after { content: ''; }
       }
 
       if(isMobile==true ){
-
+         //no scroll left-right  
+        document.body.style.overflowX = "hidden";
         if(window.innerHeight < window.innerWidth){
            //video.width=window.innerWidth;
            //video.height= 480*(video.width/640);
@@ -457,27 +460,25 @@ li > a:only-child:after { content: ''; }
            mycanvas.height= video.height;
            rectangle.width= video.width;
            rectangle.height= video.height;
-           var h = video.height + 20;
-           document.getElementById("underMenu").style.margin = h+ "px";
+           
                      alert('w>h');
 
           // alert(video.width+" "+window.width);
          }
        else if (window.innerHeight > window.innerWidth){ 
           //$('#video').addClass('portrait');
-          $('#canvas').addClass('portrait');
-          $('#videoImage').addClass('portrait');
-          $('#rectangle').addClass('portrait');
-         // video.width=window.innerWidth;
-          //video.height= 480*(video.width/640);
-          //alert('h>w'+ ' '+ video.width + ' ' + video.height);
+          //$('#canvas').addClass('portrait');
+          alert('h>w'+ ' '+ window.innerWidth +' ' + video.width);
+          video.height=window.innerWidth;
+          video.width= 480*(video.height/640);
            canvas.width= video.width;
            canvas.height= video.height;
            mycanvas.width= video.width;
            mycanvas.height= video.height;
            rectangle.width= video.width;
            rectangle.height= video.height;
-         
+           var h = video.height + 20;
+           document.getElementById("canvasDiv").style.marginBottom = h+ "px";
 
          }
 
@@ -493,14 +494,21 @@ li > a:only-child:after { content: ''; }
       var isFirst = true;
 
       tracker.on('track', function(event) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-       // contextCircle.clearRect(0, 0, circle.width, circle.height);
+       context.clearRect(0, 0, canvas.width, canvas.height);
+        //rectangleContext.clearRect(0, 0, rectW, rectH);
         event.data.forEach(function(rect) {
 
             context.strokeStyle = rect.color;
             context.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
             context.font = '11px Helvetica';
             context.fillStyle = "#fff";
+           /* 
+            rectangleContext.strokeStyle = rect.color;
+            rectangleContext.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
+            rectangleContext.font = '11px Helvetica';
+            rectangleContext.fillStyle = "#fff";
+          */
+
             //context.fillText(rect.width + 'px');
            // context.fillText('y: ' + rect.width*rect.height + 'px', rect.x + rect.width + 5, rect.y + 22);
           //  contextCircle.strokeStyle = rect.color;
@@ -689,12 +697,24 @@ li > a:only-child:after { content: ''; }
 ////-----------------------------------FUNCTIONS---------------------------------------------//
         function captureImage()
         {
+          var h = video.height + 50;
+          var l = h/3;
           var videoImage = document.getElementById('videoImage');
+          videoImage.style.marginTop = h+ "px";
+          videoImage.style.marginLeft = l+ "px";
+          var vw = 640;
+          var ww = window.innerWidth;
+          var ratio = vw/ww;
           var videoImageContext = videoImage.getContext('2d');
           videoImageContext.clearRect(0, 0, videoImage.width, videoImage.height);         
+          if(isMobile==true){
+          videoImageContext.drawImage(video,rectX*(ratio),rectY*(ratio),rectW*(ratio),rectH*(ratio),10,10,rectW,rectH);
+        }else{
           videoImageContext.drawImage(video,rectX,rectY,rectW,rectH,10,10,rectW,rectH);
+        }
           var dataURL = videoImage.toDataURL();
           console.log(dataURL);
+          $('#capturecheck').append(' :' +rectX+' '+ rectY +' '+ rectW +' '+rectH +' ww:'+ ww);
         }      
         function stopFunction()
         {
