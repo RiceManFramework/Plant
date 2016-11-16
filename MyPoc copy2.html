@@ -1,0 +1,858 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <title>Plants Observation</title>
+  <!--link rel="stylesheet" href="assets/demo.css"!-->
+  <!--script src="assets/stats.min.js"></script!-->
+  <!--script src="assets/color_camera_gui.js"></script!-->
+
+  <style>
+  .container {
+      text-align: center;
+
+}
+.color-container {
+  position: relative;
+}
+  html,body {
+    background-color: #EBE8DF;
+    color: #555;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    position: static;
+
+
+  }
+  video, canvas {
+
+    left: 0;
+    right: 0;
+    padding: 0;
+    margin: auto;
+    display: block;
+    text-align:center;
+    position: absolute;
+
+  }
+  button {
+    -webkit-transform:translateZ(200px); /* Equivalent or greater than parent's*/
+  }
+
+  .video-front {
+  }
+  .portrait {
+  transform-origin: 0 0;
+  transform: rotate(-90deg) translateX(-100%);
+  }
+/*CSS Menu*/
+h1 {
+  font-size: 60px;
+  text-align: center;
+  color: #FFF;
+}
+
+h3 {
+  font-size: 30px;
+  line-height: 34px;
+  text-align: center;
+  color: #FFF;
+}
+
+h3 a {
+  color: #FFF;
+}
+
+a {
+  color: #FFF;
+}
+
+h1 {
+  margin-top: 100px;
+  text-align:center;
+  font-size:60px;
+  line-height: 70px;
+  }
+
+#container {
+  margin: 0 auto;
+  max-width: 890px;
+}
+
+p {
+  text-align: center;
+}
+
+.toggle,
+[id^=drop] {
+  display: none;
+}
+
+/* Giving a background-color to the nav container. */
+nav {
+  margin:0;
+  padding: 0;
+  background-color: #ff4441;
+  width: 100%;
+}
+
+
+
+/* Since we'll have the "ul li" "float:left"
+ * we need to add a clear after the container. */
+
+nav:after {
+  content:"";
+  display:table;
+  clear:both;
+
+}
+
+/* Removing padding, margin and "list-style" from the "ul",
+ * and adding "position:reltive" */
+nav ul {
+  float: right;
+  padding:0;
+  margin:0;
+  list-style: none;
+  position: relative;
+  width: 100%;
+  }
+
+/* Positioning the navigation items inline */
+nav ul li {
+  margin: 0px;
+  display:inline-block;
+  float: left;
+  background-color: #ff4441;
+
+  }
+
+/* Styling the links */
+nav a {
+  display:block;
+  padding:14px 20px;
+  color:#FFF;
+  font-size:18px;
+  text-decoration:none;
+}
+
+
+nav ul li ul li:hover { background: #000000; }
+
+/* Background color change on Hover */
+nav a:hover {
+  background-color: #000000;
+}
+
+/* Hide Dropdowns by Default
+ * and giving it a position of absolute */
+nav ul ul {
+  display: none;
+  position: absolute;
+  /* has to be the same number as the "line-height" of "nav a" */
+  top: 50px;
+}
+
+/* Display Dropdowns on Hover */
+nav ul li:hover > ul {
+  display:inherit;
+}
+
+/* Fisrt Tier Dropdown */
+nav ul ul li {
+  width:170px;
+  float:none;
+  display:list-item;
+  position: relative;
+  z-index: 1;
+}
+
+/* Second, Third and more Tiers
+ * We move the 2nd and 3rd etc tier dropdowns to the left
+ * by the amount of the width of the first tier.
+*/
+nav ul ul ul li {
+  position: relative;
+  top:-50px;
+  /* has to be the same number as the "width" of "nav ul ul li" */
+  left:170px;
+}
+
+
+/* Change ' +' in order to change the Dropdown symbol */
+li > a:after { content:  ' +'; }
+li > a:only-child:after { content: ''; }
+
+
+/* Media Queries
+--------------------------------------------- */
+
+@media all and (max-width : 768px) {
+
+
+  nav {
+    margin: 0;
+  }
+
+  /* Hide the navigation menu by default */
+  /* Also hide the  */
+  .toggle + a,
+  .menu {
+    display: none;
+  }
+
+  /* Stylinf the toggle lable */
+  .toggle {
+    display: block;
+    background-color: #ff4441;
+    padding:14px 20px;
+    color:#FFF;
+    font-size:17px;
+    text-decoration:none;
+    border:none;
+  }
+
+  .toggle:hover {
+    background-color: #000000;
+  }
+
+  /* Display Dropdown when clicked on Parent Lable */
+  [id^=drop]:checked + ul {
+    display: block;
+  }
+
+  /* Change menu item's width to 100% */
+  nav ul li {
+    display: block;
+    width: 100%;
+    }
+
+  nav ul ul .toggle,
+  nav ul ul a {
+    padding: 0 40px;
+  }
+
+  nav ul ul ul a {
+    padding: 0 80px;
+  }
+
+  nav a:hover,
+  nav ul ul ul a {
+    background-color: #000000;
+  }
+
+  nav ul li ul li .toggle,
+  nav ul ul a,
+  nav ul ul ul a{
+    padding:14px 20px;
+    color:#FFF;
+    font-size:18px;
+    background-color: #ff2121;
+  }
+
+
+  nav ul li ul li .toggle,
+  nav ul ul a {
+    background-color: #ff2121;
+  }
+
+
+  /* Hide Dropdowns by Default */
+  nav ul ul {
+    float: none;
+    position:static;
+    color: #ffffff;
+    /* has to be the same number as the "line-height" of "nav a" */
+  }
+
+  /* Hide menus on hover */
+  nav ul ul ul li:hover > ul,
+  nav ul ul li:hover > ul,
+  nav ul li:hover > ul {
+    display: none;
+  }
+
+  /* Fisrt Tier Dropdown */
+  nav ul ul li {
+    display: block;
+    width: 100%;
+  }
+
+  nav ul ul ul li {
+    position: static;
+    /* has to be the same number as the "width" of "nav ul ul li" */
+
+  }
+
+}
+
+@media all and (max-width : 330px) {
+
+  nav ul li {
+    display:block;
+    width: 94%;
+  }
+
+}
+
+}
+ #selection {
+  border: 3px dotted ;
+  color: #ff00af;
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+  width: 640px;
+  height: 480px;
+
+}
+
+</style>
+</head>
+<body>
+      <div>
+      <nav>
+
+      <label for="drop" class="toggle">Menu</label>
+        <input type="checkbox" id="drop" />
+            <ul class="menu">
+                <li><a href="#">Home</a></li>
+                <li>
+                    <!-- First Tier Drop Down -->
+                    <label for="drop-1" class="toggle">Apple +</label>
+                    <a href="#">Apple</a>
+                    <input type="checkbox" id="drop-1"/>
+                    <ul>
+                        <li><a href="#">Fungal</a></li>
+                        <li><a href="#">Fungal</a></li>
+                        <li><a href="#">Fungal</a></li>
+                    </ul>
+
+                </li>
+                <li>
+
+                <!-- First Tier Drop Down -->
+                <label for="drop-2" class="toggle">Fig +</label>
+                <a href="#">Fig</a>
+                <input type="checkbox" id="drop-2"/>
+                <ul>
+                    <li id="Fungal" onclick = "isClick('Fungal')"><a>Fungal</a></li>
+                    <li><a href="#">Fungal</a></li>
+                    <li>
+
+                    <!-- Second Tier Drop Down -->
+                    <label for="drop-3" class="toggle">Fungal +</label>
+                    <a href="#">Fungal</a>
+                    <input type="checkbox" id="drop-3"/>
+
+                    <ul>
+                        <li><a href="#">Cycle1</a></li>
+                        <li><a href="#">Cycle2</a></li>
+                        <li><a href="#">Cycle3</a></li>
+                    </ul>
+                    </li>
+                </ul>
+                </li>
+                <li><a href="#">About</a></li>
+            </ul>
+      </nav>
+      </div>
+      <div id="aboveMenu"></div>
+      <p id= "Select" style= " color: #888; display: block; margin: 8px 22px 8px 22px;overflow: hidden;
+         text-align: left;" >Select your plant!</p>
+
+      <div id="canvasDiv" > <!--video, color detection, advise, image from video, selection!-->
+      <video id="video" width="640" height="480" preload autoplay loop muted controls></video>
+      <canvas id="canvas" width="640" height="480" hidden="0"  ></canvas>
+      <canvas id="mycanvas" width="640" height="480" hidden  ></canvas>
+      <canvas id="videoImage" hidden="0" ></canvas>
+      <canvas id="rectangle" width="640" height = "480" hidden="0" ></canvas>
+      </div>
+
+<!--div class="demo-frame">
+    <div class="demo-container">
+      <img id="im" src="Data/leave2.png">
+    </div>
+  </div!-->
+
+      <div id="underMenu"></div>
+      <button id="bt" style="font-size: 15px;" onmousedown="stopFunction()" >pause</button>
+      <button id="opennewwindow" style="font-size: 15px;"onclick="captureImage();">capture</button>
+      <div id="hu" style= " color: #888; display: block; text-align: left; width:10%;"></div>
+      <div id="pixel" style= " color: #888; display: block; text-align: left; width:100%;"></div>
+      <div id="capturecheck" style= " color: #888; display: block; text-align: left; width:100%;"></div>
+      <div id="option" style= " color: #888; display: block; text-align: left; width:100%;"></div>
+      <img id="canvasImg">
+      <canvas id="imagecanvas" width="640" height = "480" hidden="0" ></canvas>
+      <script src="build/tracking.js"></script>
+      <script src="js/dat.gui.min.js"></script>
+      <script src="js/jquery-3.1.0.min.js"></script>
+
+      <!--script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script!-->
+
+
+  <script>
+      var loaded = false;
+      var adviseWidth = 250, adviseHeight = 250, adviseX = 20, adviseY=20 , adviseTextX = adviseX+15, adviseTextY = adviseY+30;
+      var location,showposition,lat,lon;
+      var count = 0;
+      var isPause = false;
+      var isCount0 = false;
+
+      var pixel = document.getElementById("pixel");
+      var pixelCount = document.getElementById("pixel");
+      var capturecheck = document.getElementById("capturecheck");
+      var adviseCanvas = document.getElementById('mycanvas');
+      var adviseContext = adviseCanvas.getContext('2d');
+      var rectangle = document.getElementById('rectangle')
+      var rectangleContext = rectangle.getContext('2d');
+      var rectX = 0, rectY = 0, rectW = 200, rectH = 200;
+
+
+
+      var isMobile = false;
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      isMobile = true;
+      }
+
+      window.onload = function() {
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var mycanvas = document.getElementById('mycanvas');
+      var context = canvas.getContext('2d');
+      var countIs = 0;
+      var textbox;
+      $("#bt").on("tap",stopFunction());
+          colortrack();
+
+
+
+      if(isMobile == false && window.innerHeight > window.innerWidth)
+      {   video.width=window.innerWidth;
+          video.height= 480*(video.width/640);
+          canvas.width= video.width;
+          canvas.height= video.height;
+          mycanvas.width= video.width;
+          mycanvas.height= video.height;
+          rectangle.width= video.width;
+          rectangle.height= video.height;
+          var h = video.height + 20;
+          document.getElementById("canvasDiv").style.marginBottom = h+ "px";
+      }
+      if(isMobile == false && window.innerWidth > window.innerHeight ){
+       // For Desktop version with front-webcam
+       // document.getElementById("video").style.transform = "scale(-1, 1)";
+
+      // $('#video').addClass('video-front');
+      // $('#canvas').addClass('video-front');
+      // $('#videoImage').addClass('video-front');
+      // $('#rectangle').addClass('video-front');
+      // $('#imagecanvas').addClass('video-front');
+      // $('#canvasImg').addClass('video-front');
+      }
+
+      if(isMobile==true ){
+         //no scroll left-right
+        document.body.style.overflowX = "hidden";
+        if(window.innerHeight < window.innerWidth){
+           //video.width=window.innerWidth;
+           //video.height= 480*(video.width/640);
+           canvas.width= video.width;
+           canvas.height= video.height;
+           mycanvas.width= video.width;
+           mycanvas.height= video.height;
+           rectangle.width= video.width;
+           rectangle.height= video.height;
+
+                     alert('w>h');
+
+          // alert(video.width+" "+window.width);
+         }
+       else if (window.innerHeight > window.innerWidth){
+          //$('#video').addClass('portrait');
+          //$('#canvas').addClass('portrait');
+          alert('h>w'+ ' '+ window.innerWidth +' ' + video.width);
+          video.height=window.innerWidth;
+          video.width= 480*(video.height/640);
+           canvas.width= video.width;
+           canvas.height= video.height;
+           mycanvas.width= video.width;
+           mycanvas.height= video.height;
+           rectangle.width= video.width;
+           rectangle.height= video.height;
+           var h = video.height + 20;
+           document.getElementById("canvasDiv").style.marginBottom = h+ "px";
+
+         }
+
+      }
+
+                  //$('#opennewwindow').append(dataURL);
+      console.log(video.width+' '+ video.height);
+      //$('#pixel').empty().append(count);
+     // clearBox('pixel');
+
+         showposition = navigator.geolocation.getCurrentPosition(function(position){
+         lat = position.coords.latitude;
+         lon = position.coords.longitude;
+         saveLocation(lat,lon);
+
+          $(document).ready(function(){
+
+               $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&appid=76f8571fec547a46b3e93e74c9ef3734&units=metric", function(result){
+                 var coord = result["coord"];
+                    var coorlon = coord.lon;
+                    var coorlat = coord.lat;
+
+                 var weather = result["weather"];
+                   for(var obj in weather){
+                       weatherMain = weather[obj].main;
+                      var weatherDescription = weather[obj].description;
+                    }
+                 var main = result["main"];
+
+                   var temp = main.temp;
+                   var pressure = main.pressure;
+                   var humidity = main.humidity;
+
+                  name = result.name;
+
+                  $('#hu').append(weatherMain + " like " + weatherDescription +" at "+ name);
+                  $('#hu').append( " Temp: "+temp + " Pressure: " + pressure +" Humidity: "+ humidity);
+
+              draw();
+                var size =18;
+                function draw(){
+
+                  adviseCanvas = document.getElementById('mycanvas');
+                  adviseContext = adviseCanvas.getContext('2d');
+                  adviseContext.clearRect(0, 0, adviseCanvas.width, adviseCanvas.height);
+                  adviseContext.beginPath();
+                 // adviseContext.translate(adviseX,adviseY ); //x,y,w,h
+                  adviseContext.rect(adviseX,adviseY, adviseWidth ,adviseHeight); //x,y,w,h
+
+                 //adviseContext.fillStyle= "rgba(0,205,80,0.9)"
+                  adviseContext.fillStyle= "#ffb900"
+                  adviseContext.fill();
+                  adviseContext.font = "18px Helvetica";
+                  //adviseContext.fillStyle = "rgba(255,0,0,0.95)";
+                  adviseContext.fillStyle = "#333333";
+
+                  //fillTextMultiLine(adviseContext,  " has"+" \n Pressure: ", adviseTextX, adviseTextY);
+                 textbox = fillTextMultiLine(adviseContext, name + " has " + weatherMain +"\nTemp: "+ temp + "\n Pressure: "+pressure+"\n Humidity: "+humidity, adviseTextX, adviseTextY);
+                  requestAnimationFrame(draw);
+              }
+
+              }); // close of getJSON
+          }); // close of ready(function)
+     }); // close of showposition function
+     //initGUIControllers(tracker);
+        //var adviseCanvas = document.getElementById('mycanvas');
+
+      drawSelection();
+          function drawSelection(){
+            rectangleContext.clearRect(0, 0, rectangle.width, rectangle.height);
+            rectangleContext.beginPath();
+            rectangleContext.lineWidth="4";
+            rectangleContext.strokeStyle="green";
+            rectangleContext.rect(rectX,rectY,rectW,rectH);
+            rectangleContext.stroke();
+            requestAnimationFrame(drawSelection);
+          }
+
+        gui = new dat.GUI();
+        parameters =
+        {
+            x: 0, y: 0, w: adviseWidth, h: adviseHeight,
+            adviseVisible: true,
+            detectionVisivle: true,
+            moveX:0, moveY:0,
+            moveW:200, moveH:200,
+           // size: 18,
+        };
+        var folder1 = gui.addFolder('Textbox');
+        var adX = folder1.add( parameters, 'x' ).min(0).max(400).step(5).listen();
+        var adY = folder1.add( parameters, 'y' ).min(0).max(300).step(5).listen();
+        adX.onChange(function(value){ adviseX = value; adviseTextX = value+15});
+        adY.onChange(function(value){ adviseY = value; adviseTextY = value+30});
+        //var adW = folder1.add( parameters, 'w' ).min(0).max(400).step(5).listen();
+        //var fontsize = folder1.add( parameters, 'size' ).min(8).max(28).step(1).listen();
+        var adviseVis = gui.add(parameters,'adviseVisible').name('General Advise visible?').listen();
+        var detectionVis = gui.add(parameters,'detectionVisivle').name('Detection visible?').listen();
+        adviseVis.onChange(function (value) {
+          if(value==true){
+            visibleCanvas('mycanvas');
+          }else if(value==false){
+            hiddenCanvas('mycanvas');
+          }
+        });
+        detectionVis.onChange(function (value) {
+          if(value==true){
+            visibleCanvas('canvas');
+          }else if(value==false){
+            hiddenCanvas('canvas');
+          }
+        });
+
+        /*fontsize.onChange(function(value) {
+         // var contain = value+"px Helvetica";
+           //adviseContext.font = "'"+contain+"'" ;
+           //var spliter = adviseContext.font.split('px');
+           var newsize = value;
+           adviseContext.font = '"'+newsize+'px Arial'+'"';
+        });*/
+     //   adW.onChange(function(value){ adviseWidth = value; adviseHeight = value;});
+        //adviseX.needsUpdate = true;
+        //folder1.open();
+        var rectangleFolder = gui.addFolder('Area of Interest');
+        var rectx = rectangleFolder.add( parameters, 'moveX' ).min(0).max(400).step(5).listen();
+        var recty = rectangleFolder.add( parameters, 'moveY' ).min(0).max(300).step(5).listen();
+        var rectw = rectangleFolder.add( parameters, 'moveW' ).min(100).max(600).step(5).listen();
+        var recth = rectangleFolder.add( parameters, 'moveH' ).min(100).max(420).step(5).listen();
+        rectx.onChange(function(value){ rectX = value; });
+        recty.onChange(function(value){ rectY = value; });
+        rectw.onChange(function(value){ rectW = value; });
+        recth.onChange(function(value){ rectH = value; });
+        rectangleFolder.open();
+
+        var parametersFolder = gui.addFolder('Parameters');
+        parametersFolder.add(tracker, 'minDimension', 1, 20).step(1);
+        parametersFolder.add(tracker, 'minGroupSize', 1, 20).step(1);
+
+        var trackedColors = {
+         // custom: false  //for set diasble checkbox
+         };
+        Object.keys(tracking.ColorTracker.knownColors_).forEach(function(color) {
+          if(color=='brown')
+            {trackedColors['brown'] = true;}
+          else
+          trackedColors[color] = false;
+        });
+        var colorsFolder = gui.addFolder('Colors');
+        Object.keys(trackedColors).forEach(function(color) {
+          colorsFolder.add(trackedColors, color).onFinishChange(updateColors);
+        });
+        colorsFolder.open();
+
+        function updateColors() {
+        var colors = [];
+
+        for (var color in trackedColors) {
+            if (trackedColors[color]) {
+              colors.push(color);
+            }
+        }
+        tracker.setColors(colors);
+        }
+        colorsFolder.open();
+    }; // close of window.onload
+
+////-----------------------------------FUNCTIONS---------------------------------------------//
+        function colortrack()
+        {
+          var video = document.getElementById('video');
+          var canvas = document.getElementById('canvas');
+          var context = canvas.getContext('2d');
+          var tracker = new tracking.ColorTracker([ 'brown']);
+          tracking.track('#video', tracker, { camera: true });
+
+          $('#pixel').append(count);
+
+          var isCountingDone = false;
+          var isFirst = true;
+
+          tracker.on('track', function(event) {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            event.data.forEach(function(rect) {
+
+              if (rect.x >= rectX && (rect.x + rect.width <= rectX + rectW) && rect.y >= rectY && (rect.y + rect.height <= rectH)) {
+                context.strokeStyle = rect.color;
+                context.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
+
+                if (isPause == true && isCountingDone == false) {
+                  count += (rect.width * rect.height);
+                  //   var dataURL = video.toDataURL();
+                  //  console.log(dataURL);
+                }
+              }
+
+              else {
+                // Do nothing
+              }
+
+        });
+
+        isCountingDone = true;
+
+        if(isPause == false && isCountingDone == true) {
+          $('#pixel').empty().append(count);
+          isCountingDone = false;
+        }
+
+        else if (isPause == true && isCountingDone == true ) {
+          $('#pixel').empty().append(count);
+          isFirst = false;
+
+        }
+
+      });
+
+        }
+        function captureImage()
+        {
+          var h = video.height + 50;
+          var l = h/3;
+          var videoImage = document.getElementById('videoImage');
+          videoImage.style.marginTop = h+ "px";
+          videoImage.style.marginLeft = l+ "px";
+          videoImage.width = rectW;
+          videoImage.height = rectH;
+          var vw = 640; //is video-width
+          var ww = window.innerWidth; // is indow-width
+          var ratio = vw/ww; // is for (*) to correct the scale while drawImage
+          var videoImageContext = videoImage.getContext('2d');
+          videoImageContext.clearRect(0, 0, videoImage.width, videoImage.height);
+
+          if(isMobile==true){
+          videoImageContext.drawImage(video,rectX*(ratio),rectY*(ratio),rectW*(ratio),rectH*(ratio),10,10,rectW,rectH);
+          }else{
+          videoImageContext.drawImage(video,rectX,rectY,rectW,rectH,0,0,rectW,rectH);
+          }
+
+          var dataURL = videoImage.toDataURL();
+          document.getElementById('canvasImg').src = dataURL;
+
+          console.log(dataURL);
+          $('#capturecheck').append(' :' +rectX+' '+ rectY +' '+ rectW +' '+rectH +' ww:'+ ww);
+
+          var canvasImg = document.getElementById('canvasImg');
+          var videoImage = document.getElementById('videoImage');
+          var imagecanvas = document.getElementById('imagecanvas');
+          var imagecontext = imagecanvas.getContext('2d');
+          canvasImg.style.marginTop =  videoImage.style.marginTop;
+          canvasImg.style.marginLeft =  videoImage.style.marginLeft;
+
+          imagecanvas.width = videoImage.width;
+          imagecanvas.height = videoImage.height;
+          imagecanvas.style.marginTop =  videoImage.style.marginTop;
+          imagecanvas.style.marginLeft =  videoImage.style.marginLeft;
+
+          $( "#videoImage" ).ready(function() {
+          console.log( "ready!" );
+          colortrack2();
+
+          });
+
+        }
+        function colortrack2()
+        {
+          var videoImage = document.getElementById('videoImage');
+          var imagecanvas = document.getElementById('imagecanvas');
+          var imagecontext = imagecanvas.getContext('2d');
+          var tracker = new tracking.ColorTracker([ 'brown']);
+          tracking.track('#videoImageContext', tracker);
+
+          tracker.on('track', function(event) {
+         // imagecontext.clearRect(0, 0, imagecanvas.width, imagecanvas.height);
+          event.data.forEach(function(rect) {
+
+            imagecontext.strokeStyle = rect.color;
+            imagecontext.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
+            imagecontext.font = '11px Helvetica';
+            imagecontext.fillStyle = "#fff";
+        });
+      });
+
+        }
+
+        function stopFunction()
+        {
+          var v = document.getElementById('video');
+              if (v.paused) {
+                      v.play();
+                      //v.controls=null;
+                      isPause = false;
+                       if(count!=0){
+                         count = 0;
+                       }
+
+
+              } else {
+                      v.pause();
+                     // count = 0;
+                      isPause = true;
+                      // if(count!=0){ alert(count);}
+                     // v.controls="controls";
+              }
+              if(isPause == true){
+                $("#bt").text("play");
+              }
+              else if(isPause == false){
+                $("#bt").text("pause");
+              }
+        }
+        function selectOption(elementID)
+        {
+          var text = document.getElementById(elementID);
+        //  document.getElementById('option').append(text);
+          console.log(text.innerText);
+        }
+        function clearBox(elementID)
+        {
+            document.getElementById(elementID).innerHTML = "";
+        }
+        function hiddenCanvas(elementID) {
+            document.getElementById(elementID).style.visibility = "hidden";
+        }
+
+        function visibleCanvas(elementID) {
+          //  document.getElementById("imgbox1").style.display = "block";
+            document.getElementById(elementID).style.visibility = "visible";
+        }
+        function saveLocation(lat,lon){
+
+          this.lat = clone(lat);
+          this.lon = clone(lon);
+        }
+        function clone(obj) {
+          if (null == obj || "object" != typeof obj) return obj;
+          var copy = obj.constructor();
+          for (var attr in obj) {
+              if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+          }
+          return copy;
+        }
+
+        function fillTextMultiLine(ctx, text, x, y) {
+          var line2 = 0;
+          var lineHeight = ctx.measureText("M").width * 1.2;
+         // console.log(lineHeight*(2));
+          adviseHeight = lineHeight*(7);
+          var lines = text.split("\n");
+            for (var i = 0; i < lines.length; ++i) {
+              ctx.fillText(lines[i], x, y);
+              y += lineHeight;
+              //line+=1;
+          }
+         // var longest = line
+         var max;
+       //  var measure = [];
+       //  var lineWidth = ctx.measureText(lines[0]).width;
+         for(var i = 0; i<lines.length; i++){
+           var lineWidth = ctx.measureText(lines[i]).width;
+
+
+           max = Math.max(ctx.measureText(lines[0]).width,ctx.measureText(lines[1]).width,ctx.measureText(lines[2]).width,ctx.measureText(lines[3]).width);
+         }
+
+       //console.log(max);
+        adviseWidth = max*1.25
+
+        }
+  </script>
+
+</body>
+</html>
