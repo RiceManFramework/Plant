@@ -380,7 +380,7 @@ li > a:only-child:after { content: ''; }
       <div id="underMenu"></div>
       <button id="bt" style="font-size: 15px;" onmousedown="stopFunction()" >pause</button>   
       <button id="opennewwindow" style="font-size: 15px;"onclick="captureImage();">capture</button>   
-      <button id="add" style="font-size: 15px;"onclick="addAOT()">add</button>   
+      <button id="add" style="font-size: 15px;"onclick="newAOI()">add</button>   
       <div id="hu" style= " color: #888; display: block; text-align: left; width:10%;"></div>
       <div id="pixel" style= " color: #888; display: block; text-align: left; width:100%;"></div>
       <div id="capturecheck" style= " color: #888; display: block; text-align: left; width:100%;"></div>
@@ -725,7 +725,18 @@ li > a:only-child:after { content: ''; }
 
 
 
-        }      
+        }    
+          function newAOI(){
+            var newRect = document.createElement('canvas');
+            var newRectContect = newRect.getContext('2d'); 
+            newRectContect.clearRect(0, 0, rectangle.width, rectangle.height);
+            newRectContect.beginPath();
+            newRectContect.lineWidth="4";
+            newRectContect.strokeStyle="red";
+            newRectContect.rect(rectX,rectY,rectW,rectH);
+            newRectContect.stroke();
+            requestAnimationFrame(newAOI);
+          }  
         function stopFunction()
         {
           var v = document.getElementById('video');
