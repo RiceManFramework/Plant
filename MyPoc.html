@@ -314,7 +314,7 @@ li > a:only-child:after { content: ''; }
       <div>
       <nav>
 
-      <label for="drop" class="toggle">Menu</label>
+      <label for="drop" class="toggle">Plant Observation</label>
         <input type="checkbox" id="drop" />
             <ul class="menu">
                 <li><a href="#">Home</a></li>
@@ -325,8 +325,8 @@ li > a:only-child:after { content: ''; }
                     <input type="checkbox" id="drop-1"/>
                     <ul>
                         <li><a href="#">Fungal</a></li>
-                        <li><a href="#">Fungal</a></li>
-                        <li><a href="#">Fungal</a></li>
+                        <li><a href="#">Scap</a></li>
+                        <li><a href="#">Rust</a></li>
                     </ul> 
 
                 </li>
@@ -366,7 +366,8 @@ li > a:only-child:after { content: ''; }
       <video id="video" width="640" height="480" preload autoplay loop muted controls></video> 
       <canvas id="canvas" width="640" height="480" hidden="0"  ></canvas> 
       <canvas id="mycanvas" width="640" height="480" hidden  ></canvas> 
-      <canvas id="videoImage" width="640" height = "480" hidden="0" ></canvas> 
+      <canvas id="videoImage" hidden="0" ></canvas> 
+      <canvas id="drawTrackImage" hidden="0" ></canvas>
       <canvas id="rectangle" width="640" height = "480" hidden="0" ></canvas> 
       </div> 
      
@@ -379,6 +380,7 @@ li > a:only-child:after { content: ''; }
       <div id="underMenu"></div>
       <button id="bt" style="font-size: 15px;" onmousedown="stopFunction()" >pause</button>   
       <button id="opennewwindow" style="font-size: 15px;"onclick="captureImage();">capture</button>   
+      <button id="add" style="font-size: 15px;"onclick="addAOT()">add</button>   
       <div id="hu" style= " color: #888; display: block; text-align: left; width:10%;"></div>
       <div id="pixel" style= " color: #888; display: block; text-align: left; width:100%;"></div>
       <div id="capturecheck" style= " color: #888; display: block; text-align: left; width:100%;"></div>
@@ -449,6 +451,7 @@ li > a:only-child:after { content: ''; }
       }
 
       if(isMobile==true ){
+        screen.lockOrientation('landscape');
          //no scroll left-right  
         document.body.style.overflowX = "hidden";
         if(window.innerHeight < window.innerWidth){
@@ -498,29 +501,20 @@ li > a:only-child:after { content: ''; }
         //rectangleContext.clearRect(0, 0, rectW, rectH);
         event.data.forEach(function(rect) {
 
-            context.strokeStyle = rect.color;
-            context.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
-            context.font = '11px Helvetica';
-            context.fillStyle = "#fff";
-           /* 
-            rectangleContext.strokeStyle = rect.color;
-            rectangleContext.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
-            rectangleContext.font = '11px Helvetica';
-            rectangleContext.fillStyle = "#fff";
-          */
+          if (rect.x >= rectX && (rect.x + rect.width <= rectX + rectW) && rect.y >= rectY && (rect.y + rect.height <= rectH)) {
+                context.strokeStyle = rect.color;
+                context.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
 
-            //context.fillText(rect.width + 'px');
-           // context.fillText('y: ' + rect.width*rect.height + 'px', rect.x + rect.width + 5, rect.y + 22);
-          //  contextCircle.strokeStyle = rect.color;
-          //  contextCircle.strokeRect(rect.x, rect.y, rect.width, rect.height, rect.color);
-           // contextCircle.font = '11px Helvetica';
-          //  contextCircle.fillStyle = "#fff";
 
             if (isPause == true && isCountingDone == false) { 
                count += (rect.width * rect.height); 
               //   var dataURL = video.toDataURL();
                //  console.log(dataURL);      
             }
+          }
+          else {
+            //Do nothing
+          }
 
         });
 
@@ -700,21 +694,37 @@ li > a:only-child:after { content: ''; }
           var h = video.height + 50;
           var l = h/3;
           var videoImage = document.getElementById('videoImage');
+          var drawTrackImage = document.getElementById('drawTrackImage');
           videoImage.style.marginTop = h+ "px";
           videoImage.style.marginLeft = l+ "px";
+          videoImage.width = rectW;
+          videoImage.height = rectH; 
+
+          drawTrackImage.style.marginTop = h+ "px";
+          drawTrackImage.style.marginLeft = l+ "px";
+          drawTrackImage.width = rectW;
+          drawTrackImage.height = rectH;
+
           var vw = 640;
           var ww = window.innerWidth;
           var ratio = vw/ww;
           var videoImageContext = videoImage.getContext('2d');
+          var drawTrackImageContext = drawTrackImage.getContext('2d');
           videoImageContext.clearRect(0, 0, videoImage.width, videoImage.height);         
+          drawTrackImageContext.clearRect(0, 0, videoImage.width, videoImage.height);         
           if(isMobile==true){
-          videoImageContext.drawImage(video,rectX*(ratio),rectY*(ratio),rectW*(ratio),rectH*(ratio),10,10,rectW,rectH);
+          videoImageContext.drawImage(video,rectX*(ratio),rectY*(ratio),rectW*(ratio),rectH*(ratio),0,0,rectW,rectH);
+          drawTrackImageContext.drawImage(canvas,rectX*(ratio),rectY*(ratio),rectW*(ratio),rectH*(ratio),0,0,rectW,rectH);
         }else{
-          videoImageContext.drawImage(video,rectX,rectY,rectW,rectH,10,10,rectW,rectH);
+          videoImageContext.drawImage(video,rectX,rectY,rectW,rectH,0,0,rectW,rectH);
+          drawTrackImageContext.drawImage(canvas,rectX,rectY,rectW,rectH,0,0,rectW,rectH);
         }
-          var dataURL = videoImage.toDataURL();
+          var dataURL = videoImage.toDataURL("image/png");
           console.log(dataURL);
           $('#capturecheck').append(' :' +rectX+' '+ rectY +' '+ rectW +' '+rectH +' ww:'+ ww);
+
+
+
         }      
         function stopFunction()
         {
